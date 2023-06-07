@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+xmlns:http="http://www.mulesoft.org/schema/mule/http"
+		xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+	<http:listener-config
+		name="HTTP_Listener_curse"
+		doc:name="HTTP Listener config"
+		doc:id="e49379a9-88c3-4501-ae7a-48b018980694">
+		<http:listener-connection
+			host="0.0.0.0"
+			port="8082" />
+	</http:listener-config>
+	<http:request-config
+		name="HTTP_Request_superhero_api"
+		doc:name="HTTP Request configuration"
+		doc:id="0b7cd62b-8ea0-4272-a239-50dce17ae4e7">
+		<http:request-connection
+			protocol="HTTPS"
+			host="www.superheroapi.com" />
+	</http:request-config>
+</mule>
