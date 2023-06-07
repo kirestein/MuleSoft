@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="8e00a842-c7de-4dfb-b83d-c39ac764812a" >
+		<http:listener-connection host="0.0.0.0" port="8081" readTimeout="3000" />
+	</http:listener-config>
+	<flow name="estudosFlow" doc:id="b39681ae-5a84-495a-b6fa-a805f8f0ea9b" >
+		<http:listener doc:name="Listener" doc:id="aacafa2b-b6d3-4bf8-bdf6-603a72c85e71" config-ref="HTTP_Listener_config" path="/teste"/>
+	</flow>
+</mule>
