@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	<flow name="schedulersFlow" doc:id="ce259957-0e79-47b7-83ad-662a94184673" >
+		<http:listener doc:name="Listener" doc:id="18df6db6-2808-4422-828d-fbee89e4698e" config-ref="HTTP_Listener_curse" path="/schedul"/>
+		<logger level="INFO" doc:name="Logger" doc:id="4cd66238-1b7f-46a4-ada3-4e8a1c6bd393" />
+	</flow>
+	<flow name="schedulersFlow1" doc:id="e794bbfc-4266-4370-9b12-d7a56e0373ee" >
+<!-- [STUDIO:"Scheduler"]		<scheduler doc:name="Scheduler" doc:id="e514f219-aacc-486f-8598-a6d71b4fa6f8" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="SECONDS" />
+			</scheduling-strategy>
+		</scheduler> [STUDIO] -->
+		<logger level="INFO" doc:name="Logger" doc:id="695e018c-bec3-48f7-ae07-35ddf83fa7b6" message='"""Scheduler got invoked"""'/>
+	</flow>
+</mule>
