@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	<flow
+		name="project_01Flow"
+		doc:id="33df328f-e78f-4e71-96da-ee883070e2ff">
+		<http:listener
+			doc:name="Listener"
+			doc:id="0e1dad17-2f4e-484f-bd7c-63a6792f376e"
+			path="/demo"
+			config-ref="HTTP_Listener_config" />
+		<logger
+			level="INFO"
+			doc:name="Logger"
+			doc:id="f7363d0c-c7e5-4517-a945-2e38dddb4aca"
+			message="this is my log" />
+	</flow>
+	<flow
+		name="project_01Flow0"
+		doc:id="0dcc7790-c0d0-41c9-b36c-3430465854d7">
+		<http:listener
+			doc:name="Listener"
+			doc:id="ba501f85-6f88-452d-ace8-572288932909"
+			config-ref="HTTP_Listener_config"
+			path="/batch1" />
+		<set-payload
+			value="#[[1,2,3,4,5,6]]"
+			doc:name="[1,2,3,4,5,6]"
+			doc:id="501436d2-03de-4d6b-a734-ec68032a54c5" />
+		<batch:job jobName="project_01Batch_Job" doc:id="4822a5f3-824c-469a-9b1e-f921b0e9247d" >
+			<batch:process-records >
+				<batch:step name="Batch_Step" doc:id="af1ae6cb-ea4c-4e8f-a4cc-5a429c84233a" >
+					<batch:aggregator doc:name="Batch Aggregator 2" doc:id="60a0f665-dadd-4ef0-990f-fab1db015813" size="2">
+						<logger level="INFO" doc:name="payload" doc:id="325dfcd7-21c6-45bc-8759-d64ab0d9a1c7" message="#[payload]"/>
+					</batch:aggregator>
+					<ee:transform doc:name="Mutiply by 10" doc:id="e69e5d18-4933-4179-9c66-c8190668e007" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload * 10
+]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete >
+				<logger level="INFO" doc:name="Logger" doc:id="36aa6a3e-5086-4c1c-9836-b66049712449" message="#[payload]"/>
+			</batch:on-complete>
+		</batch:job>
+	</flow>
+	<flow name="project_01Flow2" doc:id="9899625c-5f33-4818-b6c3-347d0dc41ecc" >
+		<http:listener doc:name="Listener" doc:id="ef8d9db6-ca6a-447e-bb27-900991a5ced5" config-ref="HTTP_Listener_config" path="/choice1"/>
+		<choice doc:name="Choice" doc:id="09bf02f3-bf50-4e23-ad42-17aa73ff5ab7" >
+			<when expression="#[true]">
+				<logger level="INFO" doc:name="route1" doc:id="44e95636-bfe1-4bc0-83e3-c965f69276b7" message="Route 1"/>
+			</when>
+			<when expression="#[true]">
+				<logger level="INFO" doc:name="route 2" doc:id="6f66bcf1-11e9-482d-96f3-f9750d1cc741" message="Route 2"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="route 3" doc:id="52baa458-0c30-4a22-b9e2-106672f587fe" message="Route 3"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="project_01Flow1" doc:id="6f8b8d6c-fbed-45f2-8bd1-7697baf974bb" >
+		<http:listener doc:name="Listener" doc:id="37893160-13a0-463c-a5e0-bbac99cd1f67" config-ref="HTTP_Listener_config" path="/foreach1"/>
+		<set-payload value="#[[1,2,3,4]]" doc:name="[1,2,3,4" doc:id="7a4752ee-d507-4819-a4e0-4e7ac4ece6f3" />
+		<foreach doc:name="For Each" doc:id="e926f961-f67e-4830-97af-bbadb513181b" >
+			<set-payload value='#["order" ++ payload]' doc:name='"order" ++ payload' doc:id="150ab9ed-52e8-480d-a98e-74a712e1388f" />
+		</foreach>
+		<logger level="INFO" doc:name="payload" doc:id="54f89401-1a22-4db5-8616-04402acdb16a" message="#[payload]"/>
+	</flow>
+</mule>
