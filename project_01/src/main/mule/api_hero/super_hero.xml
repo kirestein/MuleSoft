@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+	<flow
+		name="get_character_id"
+		doc:id="4d65d30c-cae3-4788-99c0-db3c592f4257">
+		<http:listener
+			doc:name="Listener"
+			doc:id="8c45dfa5-5aac-43cc-bbe4-82271e906261"
+			config-ref="HTTP_Listener_hero"
+			path="/hero/{character_id}" />
+		<set-variable
+			value="attributes.uriParams.character_id"
+			doc:name="Character Id"
+			doc:id="1a42990d-64c1-43dd-a91e-f97fdbc05a30"
+			variableName="character_id" />
+		<http:request
+			method="GET"
+			doc:name="Request"
+			doc:id="40972943-2b53-4d80-8bad-5c7f81146c31"
+			config-ref="HTTP_Request_superhero_api"
+			path="/api.php/4720256291420995/{character-id}">
+			<http:uri-params><![CDATA[#["character-id": vars.character_id]]]></http:uri-params>
+		</http:request>
+		<ee:transform
+			doc:name="Transform Message"
+			doc:id="ce965ade-ff87-46b1-be61-5f78fd9866c7">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+var filtro = ["id", "name", "powerstats", "appearance", "work"]
+---
+// filtro map ((item, index) -> item)
+payload filterObject (filtro contains ($$ as String))]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	 <flow name="super_heroFlow" doc:id="4fb01b64-ac61-4658-a15c-15c92eb78c52" > <http:listener doc:name="Listener" 
+		doc:id="9d4fc436-1fd3-4d42-b130-b011aee021be" config-ref="HTTP_Listener_hero" path="/hero/search/{name}"/>
+		<set-variable value="attributes.uriParams.name" doc:name="Hero Name" doc:id="dc1cc1b2-1213-4092-ba67-70aec907ea11" variableName="name"/>
+		<http:request method="GET" doc:name="Request" doc:id="15d45413-e8b9-495d-846b-3bd7d294f241" config-ref="HTTP_Request_superhero_api" path="/api.php/4720256291420995/search/{name}">
+			<http:uri-params ><![CDATA[#["name": vars.name]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="51f5a956-39bd-4a69-80c4-35658b607405" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload.results map {
+	"Id": $.id,
+    "Name": $.name,
+    "Power": $.powerstats,
+    "Apparence": $.appearance,
+    "Work": $.work
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform> 
+</flow>
+	<flow name="super_heroFlow1" doc:id="1800756e-2fd0-4bf2-bc33-83c7d0168883" >
+		<http:listener doc:name="Listener" doc:id="02a76310-e796-402c-ab30-927cb6f64049" config-ref="HTTP_Listener_hero" path="/attributes/{character_id}"/>
+		<set-variable value="#[attributes.uriParams.character_id]" doc:name="Character Id" doc:id="45f1e8f3-7117-41fa-aac6-c05d33cedc5f" variableName="character_id" />
+		<scatter-gather doc:name="Scatter-Gather" doc:id="9c2c3186-82c7-4e86-8f98-91241f7591c7" >
+			<route >
+				<http:request method="GET" doc:name="Request" doc:id="c057d730-abfa-45f4-b76e-fc828f6d16e9" config-ref="HTTP_Request_superhero_api" path="/api.php/4720256291420995/{character-id}/biography">
+					<http:uri-params ><![CDATA[#[{
+	"character-id": vars.character_id
+}]]]></http:uri-params>
+				</http:request>
+				<set-variable value="#[payload]" doc:name="biography" doc:id="07262ff2-6ce2-49c8-b9b9-a3e60068042c" variableName="biography"/>
+			</route>
+			<route >
+				<http:request method="GET" doc:name="Request" doc:id="49aa278f-f02f-42a9-be75-2ecc5d3d74cd" config-ref="HTTP_Request_superhero_api" path="/api.php/4720256291420995/{character-id}/powerstats">
+					<http:uri-params ><![CDATA[#[{
+	"character-id": vars.character_id
+}]]]></http:uri-params>
+				</http:request>
+				<set-variable value="#[payload]" doc:name="Power Stats" doc:id="eb7a8a41-2a96-4bb5-b1e2-229122454af5" variableName="powerStats"/>
+			</route>
+			<route >
+				<http:request method="GET" doc:name="Request" doc:id="82ebc0ba-6204-45e4-a532-09fca601f46a" config-ref="HTTP_Request_superhero_api" path="/api.php/4720256291420995/{character-id}/work">
+					<http:uri-params ><![CDATA[#[{
+	"character-id": vars.character_id
+}]]]></http:uri-params>
+				</http:request>
+				<set-variable value="#[payload]" doc:name="work" doc:id="2ad8034e-2892-4132-b50f-fdbffadce69b" variableName="work"/>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="d993d34e-5a17-45e0-b498-a0dc7f21b660" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var powerStatsFilter = ["intelligence", "strength", "speed", "durability", "power", "combat"]
+var workFilter = ["occupation", "base"]
+---
+{
+    "Name": vars.biography."full-name",
+    "Alter Ego": vars.biography."alter-egos",
+    "First Appearance": vars.biography."first-appearance",
+    "Place od Birth": vars.biography."place-of-birth",
+    "Power Stats": vars.powerStats filterObject (powerStatsFilter contains ($$ as String)),
+    "Work": vars.work filterObject (workFilter contains ($$ as String))
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
