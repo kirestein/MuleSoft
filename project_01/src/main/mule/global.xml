@@ -7,9 +7,9 @@ xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
-	
+	<!-- API HERO -->
 	<http:listener-config
-		name="HTTP_Listener_curse"
+		name="HTTP_Listener_hero"
 		doc:name="HTTP Listener config"
 		doc:id="e49379a9-88c3-4501-ae7a-48b018980694">
 		<http:listener-connection
@@ -24,4 +24,22 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 			protocol="HTTPS"
 			host="www.superheroapi.com" />
 	</http:request-config>
+	<!-- CERTIFICATION -->
+	<http:listener-config
+		name="HTTP_Listener_config"
+		doc:name="HTTP Listener config"
+		doc:id="2297e89d-2631-4ee6-8681-1e0812c065ac">
+		<http:listener-connection
+			host="localhost"
+			port="8081" />
+	</http:listener-config>
+	<!--  CURSE -->
+	<http:listener-config
+		name="HTTP_Listener_curse"
+		doc:name="HTTP Listener config"
+		doc:id="da1da621-ce23-4862-bd02-e871d3b55d35">
+		<http:listener-connection
+			host="0.0.0.0"
+			port="8091" />
+	</http:listener-config>
 </mule>
