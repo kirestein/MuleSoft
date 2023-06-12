@@ -1,0 +1,11 @@
+hero:
+  protocol: "HTTPS"
+  host: "www.superheroapi.com"
+  timeout: "30000"
+  basePathId: "/api.php/4720256291420995/{character-id}"
+  basePathName: "/api.php/4720256291420995/search/{name}"
+  basePathBiography: "/api.php/4720256291420995/{character-id}/biography"
+  basePathPower: "/api.php/4720256291420995/{character-id}/powerstats"
+  basePathWork: "/api.php/4720256291420995/{character-id}/work"
+certification: ""
+curse: ""
