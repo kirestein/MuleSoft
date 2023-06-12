@@ -28,7 +28,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			doc:name="Request"
 			doc:id="40972943-2b53-4d80-8bad-5c7f81146c31"
 			config-ref="HTTP_Request_superhero_api"
-			path="/api.php/4720256291420995/{character-id}">
+			path="${hero.basePathId}">
 			<http:uri-params><![CDATA[#["character-id": vars.character_id]]]></http:uri-params>
 		</http:request>
 		<ee:transform
@@ -44,23 +44,81 @@ payload filterObject (filtro contains ($$ as String))]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>
-	 <flow name="super_heroFlow" doc:id="4fb01b64-ac61-4658-a15c-15c92eb78c52" > <http:listener doc:name="Listener" 
-		doc:id="9d4fc436-1fd3-4d42-b130-b011aee021be" config-ref="HTTP_Listener_hero" path="/hero/search/{name}"/>
-		<set-variable value="attributes.uriParams.name" doc:name="Hero Name" doc:id="dc1cc1b2-1213-4092-ba67-70aec907ea11" variableName="name"/>
-		<http:request method="GET" doc:name="Request" doc:id="15d45413-e8b9-495d-846b-3bd7d294f241" config-ref="HTTP_Request_superhero_api" path="/api.php/4720256291420995/search/{name}">
-			<http:uri-params ><![CDATA[#["name": vars.name]]]></http:uri-params>
+	<flow
+		name="super_heroFlow"
+		doc:id="4fb01b64-ac61-4658-a15c-15c92eb78c52">
+		<http:listener
+			doc:name="Listener"
+			doc:id="9d4fc436-1fd3-4d42-b130-b011aee021be"
+			config-ref="HTTP_Listener_hero"
+			path="/hero/search/{name}" />
+		<set-variable
+			value="#[attributes.uriParams.name]"
+			doc:name="Hero Name"
+			doc:id="dc1cc1b2-1213-4092-ba67-70aec907ea11"
+			variableName="name" />
+		<http:request
+			method="GET"
+			doc:name="Request Name"
+			doc:id="15d45413-e8b9-495d-846b-3bd7d294f241"
+			config-ref="HTTP_Request_superhero_api"
+			path="${hero.basePathName}">
+			<http:uri-params><![CDATA[#["name": vars.name]]]></http:uri-params>
 		</http:request>
-		<ee:transform doc:name="Transform Message" doc:id="51f5a956-39bd-4a69-80c4-35658b607405" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
+<!-- [STUDIO:"Character Id"]		<set-variable
+			value="#[payload.results.id&#93;"
+			doc:name="Character Id"
+			doc:id="a5534c16-4647-426d-9bd4-f80ca8b90251"
+			variableName="character_id" /> [STUDIO] -->
+<!-- [STUDIO:"For Each"]		<foreach doc:name="For Each" doc:id="a8ee1963-17e2-42c2-b21d-a2c603202d7a" collection="#[vars.character_id&#93;">
+			<logger level="INFO" doc:name="Logger" doc:id="a910fa8b-98e3-48c4-ad71-4297085b67fe" message="#[payload&#93;"/>
+			<scatter-gather doc:name="Scatter-Gather for attributes" doc:id="9c2c3186-82c7-4e86-8f98-91241f7591c7">
+			<route>
+					<http:request method="GET" doc:name="Request Biography" doc:id="c057d730-abfa-45f4-b76e-fc828f6d16e9" config-ref="HTTP_Request_superhero_api" path="${hero.basePathBiography}">
+					<http:uri-params><![CDATA[#[{
+	"character-id": payload
+}&#93;&#93;&#93;></http:uri-params>
+				</http:request>
+				<set-variable value="#[payload&#93;" doc:name="biography" doc:id="07262ff2-6ce2-49c8-b9b9-a3e60068042c" variableName="biography" />
+					<logger level="INFO" doc:name="Logger" doc:id="a849e234-730e-4862-84bf-e0fe510993f9" message="#[vars.biography&#93;"/>
+			</route>
+			<route>
+				<http:request method="GET" doc:name="Request Power Stats" doc:id="49aa278f-f02f-42a9-be75-2ecc5d3d74cd" config-ref="HTTP_Request_superhero_api" path="${hero.basePathPower}">
+					<http:uri-params><![CDATA[#[{
+	"character-id": payload
+}&#93;&#93;&#93;></http:uri-params>
+				</http:request>
+				<set-variable value="#[payload&#93;" doc:name="Power Stats" doc:id="eb7a8a41-2a96-4bb5-b1e2-229122454af5" variableName="powerStats" />
+					<logger level="INFO" doc:name="Logger" doc:id="6a2eae33-1483-4660-95ee-3d3e0a4d7274" message="#[vars.powerStats&#93;"/>
+			</route>
+			<route>
+				<http:request method="GET" doc:name="Request Work" doc:id="82ebc0ba-6204-45e4-a532-09fca601f46a" config-ref="HTTP_Request_superhero_api" path="${hero.basePathWork}">
+					<http:uri-params><![CDATA[#[{
+	"character-id": payload	
+}&#93;&#93;&#93;></http:uri-params>
+				</http:request>
+				<set-variable value="#[payload&#93;" doc:name="work" doc:id="2ad8034e-2892-4132-b50f-fdbffadce69b" variableName="work" />
+					<logger level="INFO" doc:name="Logger" doc:id="ec497a1f-dc85-41f6-a041-aa77b9f5779b" message="#[vars.work&#93;"/>
+			</route>
+		</scatter-gather>
+		</foreach> [STUDIO] -->
+		<ee:transform doc:name="output payload" doc:id="d993d34e-5a17-45e0-b498-a0dc7f21b660">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json skipNullOn="everywhere"
+var powerStatsFilter = ["intelligence", "strength", "speed", "durability", "power", "combat"]
+var workFilter = ["occupation", "base"]
 ---
 payload.results map {
 	"Id": $.id,
-    "Name": $.name,
-    "Power": $.powerstats,
-    "Apparence": $.appearance,
-    "Work": $.work
+	"Hero": $.name,
+    "Name": $.."full-name",
+    "Alter Ego": $.."alter-egos",
+    "First Appearance": $.."first-appearance",
+    "Place of Birth": $.."place-of-birth",
+    "Power Status": $.powerstats filterObject (powerStatsFilter contains ($$ as String)),
+    "Work": $.work filterObject (workFilter contains ($$ as String))
+
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform> 
@@ -68,33 +126,33 @@ payload.results map {
 	<flow name="super_heroFlow1" doc:id="1800756e-2fd0-4bf2-bc33-83c7d0168883" >
 		<http:listener doc:name="Listener" doc:id="02a76310-e796-402c-ab30-927cb6f64049" config-ref="HTTP_Listener_hero" path="/attributes/{character_id}"/>
 		<set-variable value="#[attributes.uriParams.character_id]" doc:name="Character Id" doc:id="45f1e8f3-7117-41fa-aac6-c05d33cedc5f" variableName="character_id" />
-		<scatter-gather doc:name="Scatter-Gather" doc:id="9c2c3186-82c7-4e86-8f98-91241f7591c7" >
+		<scatter-gather doc:name="Scatter-Gather for attributes" doc:id="52e78a6b-2e42-42cd-a1a3-39904126b6fc" >
 			<route >
-				<http:request method="GET" doc:name="Request" doc:id="c057d730-abfa-45f4-b76e-fc828f6d16e9" config-ref="HTTP_Request_superhero_api" path="/api.php/4720256291420995/{character-id}/biography">
+				<http:request method="GET" doc:name="Request Biography" doc:id="0874811d-aaab-46be-91d7-0132636cd8d7" config-ref="HTTP_Request_superhero_api" path="${hero.basePathBiography}" >
 					<http:uri-params ><![CDATA[#[{
 	"character-id": vars.character_id
 }]]]></http:uri-params>
 				</http:request>
-				<set-variable value="#[payload]" doc:name="biography" doc:id="07262ff2-6ce2-49c8-b9b9-a3e60068042c" variableName="biography"/>
+				<set-variable value="#[payload]" doc:name="biography" doc:id="ffe5c67f-f13f-4ca6-9afa-d61c5f282a88" variableName="biography" />
 			</route>
 			<route >
-				<http:request method="GET" doc:name="Request" doc:id="49aa278f-f02f-42a9-be75-2ecc5d3d74cd" config-ref="HTTP_Request_superhero_api" path="/api.php/4720256291420995/{character-id}/powerstats">
+				<http:request method="GET" doc:name="Request Power Stats" doc:id="57f75dac-e4fe-4359-945b-20a0ab9b8f69" config-ref="HTTP_Request_superhero_api" path="${hero.basePathPower}" >
 					<http:uri-params ><![CDATA[#[{
 	"character-id": vars.character_id
 }]]]></http:uri-params>
 				</http:request>
-				<set-variable value="#[payload]" doc:name="Power Stats" doc:id="eb7a8a41-2a96-4bb5-b1e2-229122454af5" variableName="powerStats"/>
+				<set-variable value="#[payload]" doc:name="Power Stats" doc:id="2397908c-73e0-42d2-90a8-30eecfda2174" variableName="powerStats" />
 			</route>
 			<route >
-				<http:request method="GET" doc:name="Request" doc:id="82ebc0ba-6204-45e4-a532-09fca601f46a" config-ref="HTTP_Request_superhero_api" path="/api.php/4720256291420995/{character-id}/work">
+				<http:request method="GET" doc:name="Request Work" doc:id="155515a0-57d2-4071-a13d-78f7621a5a24" config-ref="HTTP_Request_superhero_api" path="${hero.basePathWork}" >
 					<http:uri-params ><![CDATA[#[{
 	"character-id": vars.character_id
 }]]]></http:uri-params>
 				</http:request>
-				<set-variable value="#[payload]" doc:name="work" doc:id="2ad8034e-2892-4132-b50f-fdbffadce69b" variableName="work"/>
+				<set-variable value="#[payload]" doc:name="work" doc:id="aa3bae84-3e0f-43b9-addf-f7a144e75df1" variableName="work" />
 			</route>
 		</scatter-gather>
-		<ee:transform doc:name="Transform Message" doc:id="d993d34e-5a17-45e0-b498-a0dc7f21b660" >
+		<ee:transform doc:name='output payload' doc:id="fd900d18-fb1a-46a5-81f1-8a345fa9d5a2" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
