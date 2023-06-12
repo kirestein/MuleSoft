@@ -21,8 +21,8 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		doc:name="HTTP Request configuration"
 		doc:id="0b7cd62b-8ea0-4272-a239-50dce17ae4e7">
 		<http:request-connection
-			protocol="HTTPS"
-			host="www.superheroapi.com" />
+			protocol="${hero.protocol}"
+			host="${hero.host}" connectionIdleTimeout="${hero.timeout}"/>
 	</http:request-config>
 	<!-- CERTIFICATION -->
 	<http:listener-config
@@ -42,4 +42,5 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 			host="0.0.0.0"
 			port="8091" />
 	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="0c9ca7bc-feac-4e1c-9134-48cb9bb1bb75" file="config.yaml" />
 </mule>
