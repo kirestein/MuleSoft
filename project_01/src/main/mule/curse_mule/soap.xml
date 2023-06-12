@@ -13,9 +13,9 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	</wsc:config>
 	<flow name="soapFlow" doc:id="61826610-7203-4484-afd5-7a6003913059" >
 		<http:listener doc:name="Listener" doc:id="5b1a7387-df3e-4729-8f1b-c23d4ffa7c95" config-ref="HTTP_Listener_curse" path="/soap"/>
-		<logger level="INFO" doc:name="Logger" doc:id="ed0ca27f-2d47-417d-aff4-5218f79f47e1" />
-		<set-variable value="10" doc:name="num1" doc:id="4425eb9c-a84f-44b5-a213-e0df0c26fa0d" variableName="num1"/>
-		<set-variable value="15" doc:name="num2" doc:id="3e7031b4-e9a1-4538-9bae-986929a3551f" variableName="num2"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ed0ca27f-2d47-417d-aff4-5218f79f47e1" message="-------Passei por aqui--------"/>
+		<set-variable value="#[attributes.queryParams.num1]" doc:name="num1" doc:id="4425eb9c-a84f-44b5-a213-e0df0c26fa0d" variableName="num1"/>
+		<set-variable value="#[attributes.queryParams.num2]" doc:name="num2" doc:id="3e7031b4-e9a1-4538-9bae-986929a3551f" variableName="num2"/>
 		<ee:transform doc:name="Transform Message" doc:id="275d6bd7-6bc3-4ca7-b676-58084ea08caa" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0

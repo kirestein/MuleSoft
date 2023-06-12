@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="mainFlow" doc:id="d0fd1b50-69ac-4f92-819d-63148173db70" >
+<!-- [STUDIO:"HELLO"]		<scheduler doc:name="HELLO" doc:id="ce9ef205-c65e-4ba8-a4e1-74d8365a9fee" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="1" timeUnit="DAYS"/>
+			</scheduling-strategy>
+		</scheduler> [STUDIO] -->
+		<logger level="INFO" doc:name="Main flow Logger" doc:id="69de741e-92f9-40ba-a656-786a02a65e40" message='"""MAIN FLOW WAS INVOKED"""'/>
+		<set-variable value="10" doc:name="num1" doc:id="d097c423-315b-4762-973c-1102c7df5c33" variableName="num1"/>
+		<flow-ref doc:name="Private Flow Reference" doc:id="4077ff47-f6d2-46eb-a571-faf99474ff80" name="privateFlow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="99a5a7f8-198b-4e85-b55d-80c364affe26" message="#[vars.num1]"/>
+	</flow>
+	<flow name="privateFlow" doc:id="673f9be6-64b2-4759-96eb-b75604de8f92" >
+		<logger level="INFO" doc:name="private logger" doc:id="d5c588bb-83ea-4e72-b6d4-e1d793d8cf4c" message='"""Private Flow was invoked"'/>
+		<flow-ref doc:name="Flow Reference" doc:id="60f3d632-038b-49fb-a5d8-de52fbaf96b2" name="Sub_Flow"/>
+	</flow>
+	<sub-flow name="Sub_Flow" doc:id="3ccb821a-6691-4209-a591-65e56b5b7264" >
+		<logger level="INFO" doc:name="Logger" doc:id="9549072c-1ebb-4f8e-87b8-fa6f255eaf0b" message='#[vars.num1]'/>
+		<set-variable value="20" doc:name="num1" doc:id="edf8bfd8-91ae-455f-b4fc-a2d1994c64ae" variableName="num1"/>
+	</sub-flow>
+</mule>
