@@ -65,43 +65,6 @@ payload filterObject (filtro contains ($$ as String))]]></ee:set-payload>
 			path="${hero.basePathName}">
 			<http:uri-params><![CDATA[#["name": vars.name]]]></http:uri-params>
 		</http:request>
-<!-- [STUDIO:"Character Id"]		<set-variable
-			value="#[payload.results.id&#93;"
-			doc:name="Character Id"
-			doc:id="a5534c16-4647-426d-9bd4-f80ca8b90251"
-			variableName="character_id" /> [STUDIO] -->
-<!-- [STUDIO:"For Each"]		<foreach doc:name="For Each" doc:id="a8ee1963-17e2-42c2-b21d-a2c603202d7a" collection="#[vars.character_id&#93;">
-			<logger level="INFO" doc:name="Logger" doc:id="a910fa8b-98e3-48c4-ad71-4297085b67fe" message="#[payload&#93;"/>
-			<scatter-gather doc:name="Scatter-Gather for attributes" doc:id="9c2c3186-82c7-4e86-8f98-91241f7591c7">
-			<route>
-					<http:request method="GET" doc:name="Request Biography" doc:id="c057d730-abfa-45f4-b76e-fc828f6d16e9" config-ref="HTTP_Request_superhero_api" path="${hero.basePathBiography}">
-					<http:uri-params><![CDATA[#[{
-	"character-id": payload
-}&#93;&#93;&#93;></http:uri-params>
-				</http:request>
-				<set-variable value="#[payload&#93;" doc:name="biography" doc:id="07262ff2-6ce2-49c8-b9b9-a3e60068042c" variableName="biography" />
-					<logger level="INFO" doc:name="Logger" doc:id="a849e234-730e-4862-84bf-e0fe510993f9" message="#[vars.biography&#93;"/>
-			</route>
-			<route>
-				<http:request method="GET" doc:name="Request Power Stats" doc:id="49aa278f-f02f-42a9-be75-2ecc5d3d74cd" config-ref="HTTP_Request_superhero_api" path="${hero.basePathPower}">
-					<http:uri-params><![CDATA[#[{
-	"character-id": payload
-}&#93;&#93;&#93;></http:uri-params>
-				</http:request>
-				<set-variable value="#[payload&#93;" doc:name="Power Stats" doc:id="eb7a8a41-2a96-4bb5-b1e2-229122454af5" variableName="powerStats" />
-					<logger level="INFO" doc:name="Logger" doc:id="6a2eae33-1483-4660-95ee-3d3e0a4d7274" message="#[vars.powerStats&#93;"/>
-			</route>
-			<route>
-				<http:request method="GET" doc:name="Request Work" doc:id="82ebc0ba-6204-45e4-a532-09fca601f46a" config-ref="HTTP_Request_superhero_api" path="${hero.basePathWork}">
-					<http:uri-params><![CDATA[#[{
-	"character-id": payload	
-}&#93;&#93;&#93;></http:uri-params>
-				</http:request>
-				<set-variable value="#[payload&#93;" doc:name="work" doc:id="2ad8034e-2892-4132-b50f-fdbffadce69b" variableName="work" />
-					<logger level="INFO" doc:name="Logger" doc:id="ec497a1f-dc85-41f6-a041-aa77b9f5779b" message="#[vars.work&#93;"/>
-			</route>
-		</scatter-gather>
-		</foreach> [STUDIO] -->
 		<ee:transform doc:name="output payload" doc:id="d993d34e-5a17-45e0-b498-a0dc7f21b660">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
