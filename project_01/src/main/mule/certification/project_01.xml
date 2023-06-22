@@ -82,4 +82,49 @@ payload * 10
 		</foreach>
 		<logger level="INFO" doc:name="payload" doc:id="54f89401-1a22-4db5-8616-04402acdb16a" message="#[payload]"/>
 	</flow>
+	<flow name="project_01Flow3" doc:id="8a415a16-f14b-49bd-a8a8-59caad8e367e" >
+<!-- [STUDIO:"Scheduler"]		<scheduler doc:name="Scheduler" doc:id="0f758098-914a-4501-adb6-f606c7c0e89d" >
+			<scheduling-strategy >
+				<fixed-frequency timeUnit="HOURS" frequency="10"/>
+			</scheduling-strategy>
+		</scheduler> [STUDIO] -->
+		<set-payload value="#[[1, 2, 3]]" doc:name="to [1,2,3]" doc:id="b16595ef-be46-4a07-bea0-172ba8a91696" />
+		<batch:job jobName="project_01Batch_Job1" doc:id="b0450d85-dcf7-4ec8-9e0d-b94249248ce1" >
+			<batch:process-records >
+				<batch:step name="Batch_Step1" doc:id="de3736ae-6195-45f9-99ff-5e054a53d7e9" >
+					<set-variable value="#[payload]" doc:name="batchStepPayload to payload" doc:id="c70a57d7-2504-4143-abf6-2fd541e9b1ae" variableName="batchStepPayload"/>
+				</batch:step>
+				<batch:step name="Batch_Step2" doc:id="c9320ff6-165e-4115-860e-80b71a998167" >
+					<set-variable value="#[vars.batchStepPayload + 10]" doc:name="increment batchStepPayload + 10" doc:id="8cc2d91f-0bd7-4988-b866-aaca26a1537a" variableName="increment"/>
+					<set-payload value="#[vars.increment]" doc:name="to var batchStepPayload" doc:id="59f4f91e-a3ec-4e04-800c-e1160d1b9ba6" />
+					<logger level="INFO" doc:name="Log payload" doc:id="b42f0841-42ac-4ab7-8ea3-72608456c749" message="payload: #[payload]"/>
+				</batch:step>
+			</batch:process-records>
+		</batch:job>
+	</flow>
+	<flow name="project_01Flow4" doc:id="67bc2121-2643-4d28-a92c-697b521832ed" >
+<!-- [STUDIO:"Scheduler"]		<scheduler doc:name="Scheduler" doc:id="16adde97-4614-4f39-813c-e2ba5916a9a3" >
+			<scheduling-strategy >
+				<fixed-frequency timeUnit="HOURS"/>
+			</scheduling-strategy>
+		</scheduler> [STUDIO] -->
+		<set-payload value="#[[1,2,3,4]]" doc:name="Set Payload" doc:id="61b91a46-449d-49e5-b251-18f053582413" />
+		<batch:job jobName="project_01Batch_Job2" doc:id="4863b9fd-4453-4325-ae33-648846883cdf" >
+			<batch:process-records >
+				<batch:step name="Batch_Step3" doc:id="e3903110-4653-41db-ba42-73923fe973bd" acceptExpression="#[(payload mod 2) != 0]">
+					<ee:transform doc:name="Transform Message" doc:id="a74efe24-502a-411f-9bd3-b93306303b83" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload / 3]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="a2a19738-4ec9-4820-af77-342e88df48bd" size="2">
+						<logger level="INFO" doc:name="Logger" doc:id="9a712466-19c1-43a8-8087-73cf82eff629" message="payload: #[payload]"/>
+					</batch:aggregator>
+				</batch:step>
+			</batch:process-records>
+		</batch:job>
+	</flow>
 </mule>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="forEachFlow" doc:id="e0b730ab-8213-42cd-850e-0d68898cb170" >
+<!-- [STUDIO:"Scheduler"]		<scheduler doc:name="Scheduler" doc:id="371e394e-13bf-49bd-9e76-829fc5220e71" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="HOURS"/>
+			</scheduling-strategy>
+		</scheduler> [STUDIO] -->
+		<logger level="INFO" doc:name="Logger" doc:id="08b7e84c-6080-457b-be3d-38208ba41106" message='"""BEFORE FOR EACH"""'/>
+		<set-variable value="#[[1, 2, 3, 4, 5, 6, 7]]" doc:name="arr" doc:id="fc3a70fa-9b57-4038-a9e8-61fd9e873f6f" variableName="arr"/>
+		<foreach doc:name="For Each" doc:id="0193cbf7-206e-452f-9a61-6fe866c90eba" collection="#[vars.arr]">
+			<logger level="INFO" doc:name="Logger" doc:id="1c29a930-1aa2-4c93-953a-748178e72bf5" message='#["Este é o peyload" ++ payload]'/>
+		</foreach>
+		<logger level="INFO" doc:name="Logger" doc:id="efe3a056-8e14-4fda-a6e2-748c0b91c4f2" message='"""END OF FLOW"""'/>
+	</flow>
+</mule>

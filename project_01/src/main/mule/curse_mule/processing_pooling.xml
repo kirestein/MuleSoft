@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="a4fac826-c8c9-45cc-a4e5-31d0a0d1109b" >
+		<file:connection workingDir="/home/erik_proenca/AnypointStudio/studio-workspace/input" />
+	</file:config>
+<!-- [STUDIO:"fileProcessingFlow"]	<flow name="fileProcessingFlow" doc:id="5959daa8-4aed-4880-9a1b-8511ee06a56b" >
+		<file:listener doc:name="On New or Updated File" doc:id="3126f2aa-b8d0-45e2-b3c0-7127dd696337" config-ref="File_Config" directory="/home/erik_proenca/AnypointStudio/studio-workspace/input" autoDelete="true" moveToDirectory="/home/erik_proenca/AnypointStudio/studio-workspace/output">
+			<scheduling-strategy >
+				<fixed-frequency frequency="5" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</file:listener>
+		<logger level="INFO" doc:name="Payload" doc:id="7c866167-0386-473b-9a03-6c0224d44bfa" message="#[payload&#93;"/>
+	</flow> [STUDIO] -->
+</mule>
